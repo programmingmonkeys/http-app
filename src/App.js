@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import './App.css'
+
 const apiEndpoint = 'https://jsonplaceholder.typicode.com/posts'
 
 class App extends Component {
@@ -31,9 +32,18 @@ class App extends Component {
   }
 
   handleDelete = async post => {
-    await axios.delete(`${apiEndpoint}/${post.id}`)
+    const originalPost = this.state.posts
+
     const posts = this.state.posts.filter(p => p.id !== post.id)
     this.setState({ posts })
+
+    try {
+      await axios.delete(`${apiEndpoint}/${post.id}`)
+      throw new Error('error out')
+    } catch (err) {
+      console.log(err)
+      this.setState({ posts: originalPost })
+    }
   }
 
   render() {
