@@ -10,7 +10,6 @@ class App extends Component {
 
   async componentDidMount() {
     const { data: posts } = await axios.get(apiEndpoint)
-    console.log(posts)
     this.setState({ posts })
   }
 
@@ -22,8 +21,13 @@ class App extends Component {
     this.setState({ posts })
   }
 
-  handleUpdate = post => {
-    console.log('Update', post)
+  handleUpdate = async post => {
+    post.title = 'UPDATED'
+    axios.put(`${apiEndpoint}/${post.id}`, post)
+    const posts = [...this.state.posts]
+    const index = posts.indexOf(post)
+    posts[index] = { ...post }
+    this.setState({ posts })
   }
 
   handleDelete = post => {
